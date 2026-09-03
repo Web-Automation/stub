@@ -36,6 +36,22 @@
         <span id="word-limit-note">limit: 5,000 words</span>
       </div>
 
+      <label for="edit-code-input" class="field-label">Edit code (optional)</label>
+      <input
+        id="edit-code-input"
+        type="text"
+        placeholder="6 letters and/or numbers"
+        maxlength="6"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <p class="field-hint">
+        Set a 6-character code if you might want to update or delete this later.
+        Leave it blank if you're done once you save — you'll still be able to read it back,
+        just not change or remove it.
+      </p>
+      <p id="edit-code-error" class="error-text" role="alert" hidden></p>
+
       <button id="save-button" class="btn btn-primary" type="button">Save</button>
       <p id="save-error" class="error-text" role="alert" hidden></p>
 
@@ -44,7 +60,7 @@
         <div class="ticket-perforation" aria-hidden="true"></div>
         <p class="ticket-label">Your code</p>
         <p id="ticket-code" class="ticket-code">—</p>
-        <p class="ticket-note">Save this. You'll need it to read your text again — it's kept for 1 year, then removed.</p>
+        <p id="ticket-note" class="ticket-note">Save this. You'll need it to read your text again — it's kept for 1 year, then removed.</p>
         <button id="copy-code-button" class="btn btn-quiet" type="button">Copy code</button>
       </div>
     </section>
@@ -69,7 +85,38 @@
           <button id="copy-text-button" class="btn btn-quiet" type="button">Copy text</button>
           <button id="download-pdf-button" class="btn btn-quiet" type="button">Download as PDF</button>
         </div>
+
+        <!-- Shown only when the entry has an edit code set -->
+        <div id="edit-controls" hidden>
+          <div class="subsection-divider" aria-hidden="true"></div>
+
+          <h3 class="subsection-heading">Update this entry</h3>
+          <label for="update-text-input" class="field-label">Text</label>
+          <textarea id="update-text-input" rows="5" maxlength="60000"></textarea>
+          <div class="field-meta">
+            <span id="update-word-count">0 words</span>
+            <span>limit: 5,000 words</span>
+          </div>
+          <label for="update-edit-code-input" class="field-label">Edit code</label>
+          <input id="update-edit-code-input" type="text" maxlength="6" autocomplete="off" spellcheck="false" />
+          <button id="update-button" class="btn btn-primary" type="button">Save changes</button>
+          <p id="update-error" class="error-text" role="alert" hidden></p>
+          <p id="update-success" class="success-text" role="status" hidden>Updated.</p>
+
+          <div class="subsection-divider" aria-hidden="true"></div>
+
+          <h3 class="subsection-heading">Delete this entry</h3>
+          <p class="field-hint">This permanently removes the entry. It can't be undone.</p>
+          <label for="delete-edit-code-input" class="field-label">Edit code</label>
+          <input id="delete-edit-code-input" type="text" maxlength="6" autocomplete="off" spellcheck="false" />
+          <button id="delete-button" class="btn btn-danger" type="button">Delete permanently</button>
+          <p id="delete-error" class="error-text" role="alert" hidden></p>
+        </div>
+
+        <!-- Shown only when the entry has no edit code set -->
+        <p id="no-edit-note" class="field-hint" hidden>This entry has no edit code, so it can only be viewed — not changed or deleted.</p>
       </div>
+      <p id="delete-confirmation" class="success-text" role="status" hidden>Entry deleted. That code no longer works.</p>
     </section>
   </main>
 
