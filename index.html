@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stub — write it down, get a code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <header class="page-header">
+    <h1>Stub</h1>
+    <p class="tagline">Write something down. Get a code. Come back with the code to read it again.</p>
+  </header>
+
+  <main>
+    <!-- WRITE -->
+    <section class="panel" aria-labelledby="write-heading">
+      <h2 id="write-heading">Write</h2>
+
+      <label for="text-input" class="field-label">Your text</label>
+      <textarea
+        id="text-input"
+        placeholder="Start writing…"
+        rows="6"
+        maxlength="60000"
+      ></textarea>
+
+      <div class="field-meta">
+        <span id="word-count">0 words</span>
+        <span id="word-limit-note">limit: 5,000 words</span>
+      </div>
+
+      <button id="save-button" class="btn btn-primary" type="button">Save</button>
+      <p id="save-error" class="error-text" role="alert" hidden></p>
+
+      <!-- Ticket stub, shown after a successful save -->
+      <div id="ticket" class="ticket" hidden>
+        <div class="ticket-perforation" aria-hidden="true"></div>
+        <p class="ticket-label">Your code</p>
+        <p id="ticket-code" class="ticket-code">—</p>
+        <p class="ticket-note">Save this. You'll need it to read your text again — it's kept for 1 year, then removed.</p>
+        <button id="copy-code-button" class="btn btn-quiet" type="button">Copy code</button>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- RETRIEVE -->
+    <section class="panel" aria-labelledby="retrieve-heading">
+      <h2 id="retrieve-heading">Retrieve</h2>
+
+      <label for="code-input" class="field-label">Your code</label>
+      <div class="retrieve-row">
+        <input id="code-input" type="text" placeholder="e.g. 7Kx9mNp3Qz" autocomplete="off" spellcheck="false" />
+        <button id="retrieve-button" class="btn btn-primary" type="button">Retrieve</button>
+      </div>
+      <p id="retrieve-error" class="error-text" role="alert" hidden></p>
+
+      <div id="result" class="result" hidden>
+        <p id="result-meta" class="result-meta"></p>
+        <div id="result-text" class="result-text"></div>
+        <div class="result-actions">
+          <button id="copy-text-button" class="btn btn-quiet" type="button">Copy text</button>
+          <button id="download-pdf-button" class="btn btn-quiet" type="button">Download as PDF</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <p>Anyone with a code can read that entry — don't use this for anything sensitive.</p>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
