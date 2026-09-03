@@ -134,6 +134,15 @@ input[type="text"]:focus {
   color: #fff;
 }
 
+#save-button {
+  margin-top: 8px;
+}
+
+#update-button,
+#delete-button {
+  margin-top: 4px;
+}
+
 .btn-primary:hover:not(:disabled) {
   background: var(--teal-deep);
 }
@@ -151,6 +160,13 @@ input[type="text"]:focus {
   color: var(--teal-deep);
 }
 
+.field-hint {
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  margin: 8px 0 4px;
+  max-width: 52ch;
+}
+
 .error-text {
   color: var(--rust);
   background: var(--rust-soft);
@@ -158,6 +174,46 @@ input[type="text"]:focus {
   padding: 10px 12px;
   font-size: 0.875rem;
   margin: 12px 0 0;
+}
+
+.success-text {
+  color: var(--teal-deep);
+  background: #e4ede9;
+  border-radius: 3px;
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  margin: 12px 0 0;
+}
+
+.btn-danger {
+  background: transparent;
+  border-color: var(--rust);
+  color: var(--rust);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--rust);
+  color: #fff;
+}
+
+.subsection-divider {
+  height: 0;
+  border-top: 1px solid var(--rule);
+  margin: 20px 0;
+}
+
+.subsection-heading {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin: 0 0 12px;
+}
+
+#edit-code-input,
+#update-edit-code-input,
+#delete-edit-code-input {
+  font-family: var(--font-mono);
+  max-width: 200px;
 }
 
 /* --- Ticket stub: the one deliberate visual moment --- */
