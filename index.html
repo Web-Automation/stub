@@ -18,11 +18,14 @@
     <p class="tagline">Write something down. Get a code. Come back with the code to read it again.</p>
   </header>
 
+  <div class="tabs" role="tablist" aria-label="Stub">
+    <button type="button" class="tab" role="tab" id="tab-write" aria-selected="true" aria-controls="panel-write">Write</button>
+    <button type="button" class="tab" role="tab" id="tab-retrieve" aria-selected="false" aria-controls="panel-retrieve" tabindex="-1">Retrieve</button>
+  </div>
+
   <main>
     <!-- WRITE -->
-    <section class="panel" aria-labelledby="write-heading">
-      <h2 id="write-heading">Write</h2>
-
+    <section id="panel-write" class="panel-content" role="tabpanel" aria-labelledby="tab-write" tabindex="0">
       <div id="write-form">
         <label for="text-input" class="field-label">Your text</label>
         <textarea
@@ -75,20 +78,20 @@
       </div>
     </section>
 
-    <div class="section-divider" aria-hidden="true"></div>
-
     <!-- RETRIEVE -->
-    <section class="panel" aria-labelledby="retrieve-heading">
-      <h2 id="retrieve-heading">Retrieve</h2>
-
-      <label for="code-input" class="field-label">Your code</label>
-      <div class="retrieve-row">
-        <input id="code-input" type="text" placeholder="e.g. 7Kx9mNp3Qz" autocomplete="off" spellcheck="false" />
-        <button id="retrieve-button" class="btn btn-primary" type="button">Retrieve</button>
+    <section id="panel-retrieve" class="panel-content" role="tabpanel" aria-labelledby="tab-retrieve" tabindex="0" hidden>
+      <div id="retrieve-form">
+        <label for="code-input" class="field-label">Your code</label>
+        <div class="retrieve-row">
+          <input id="code-input" type="text" placeholder="e.g. 7Kx9mNp3Qz" autocomplete="off" spellcheck="false" />
+          <button id="retrieve-button" class="btn btn-primary" type="button">Retrieve</button>
+        </div>
+        <p id="retrieve-error" class="error-text" role="alert" hidden></p>
+        <p id="delete-confirmation" class="success-text" role="status" hidden>Entry deleted. That code no longer works.</p>
       </div>
-      <p id="retrieve-error" class="error-text" role="alert" hidden></p>
 
       <div id="result" class="result" hidden>
+        <button id="lookup-another-button" class="btn btn-quiet btn-back" type="button">&larr; Look up another code</button>
         <p id="result-meta" class="result-meta"></p>
         <div id="result-text" class="result-text"></div>
         <div class="result-actions">
@@ -97,36 +100,36 @@
         </div>
 
         <!-- Shown only when the entry has an edit code set -->
-        <div id="edit-controls" hidden>
-          <div class="subsection-divider" aria-hidden="true"></div>
+        <details id="edit-controls" class="accordion" hidden>
+          <summary>Edit or delete this entry</summary>
+          <div class="accordion-body">
+            <h3 class="subsection-heading">Update this entry</h3>
+            <label for="update-text-input" class="field-label">Text</label>
+            <textarea id="update-text-input" rows="5" maxlength="60000"></textarea>
+            <div class="field-meta">
+              <span id="update-word-count">0 words</span>
+              <span>limit: 5,000 words</span>
+            </div>
+            <label for="update-edit-code-input" class="field-label">Edit code</label>
+            <input id="update-edit-code-input" type="text" maxlength="6" autocomplete="off" spellcheck="false" />
+            <button id="update-button" class="btn btn-primary" type="button">Save changes</button>
+            <p id="update-error" class="error-text" role="alert" hidden></p>
+            <p id="update-success" class="success-text" role="status" hidden>Updated.</p>
 
-          <h3 class="subsection-heading">Update this entry</h3>
-          <label for="update-text-input" class="field-label">Text</label>
-          <textarea id="update-text-input" rows="5" maxlength="60000"></textarea>
-          <div class="field-meta">
-            <span id="update-word-count">0 words</span>
-            <span>limit: 5,000 words</span>
+            <div class="subsection-divider" aria-hidden="true"></div>
+
+            <h3 class="subsection-heading">Delete this entry</h3>
+            <p class="field-hint">This permanently removes the entry. It can't be undone.</p>
+            <label for="delete-edit-code-input" class="field-label">Edit code</label>
+            <input id="delete-edit-code-input" type="text" maxlength="6" autocomplete="off" spellcheck="false" />
+            <button id="delete-button" class="btn btn-danger" type="button">Delete permanently</button>
+            <p id="delete-error" class="error-text" role="alert" hidden></p>
           </div>
-          <label for="update-edit-code-input" class="field-label">Edit code</label>
-          <input id="update-edit-code-input" type="text" maxlength="6" autocomplete="off" spellcheck="false" />
-          <button id="update-button" class="btn btn-primary" type="button">Save changes</button>
-          <p id="update-error" class="error-text" role="alert" hidden></p>
-          <p id="update-success" class="success-text" role="status" hidden>Updated.</p>
-
-          <div class="subsection-divider" aria-hidden="true"></div>
-
-          <h3 class="subsection-heading">Delete this entry</h3>
-          <p class="field-hint">This permanently removes the entry. It can't be undone.</p>
-          <label for="delete-edit-code-input" class="field-label">Edit code</label>
-          <input id="delete-edit-code-input" type="text" maxlength="6" autocomplete="off" spellcheck="false" />
-          <button id="delete-button" class="btn btn-danger" type="button">Delete permanently</button>
-          <p id="delete-error" class="error-text" role="alert" hidden></p>
-        </div>
+        </details>
 
         <!-- Shown only when the entry has no edit code set -->
         <p id="no-edit-note" class="field-hint" hidden>This entry has no edit code, so it can only be viewed — not changed or deleted.</p>
       </div>
-      <p id="delete-confirmation" class="success-text" role="status" hidden>Entry deleted. That code no longer works.</p>
     </section>
   </main>
 
