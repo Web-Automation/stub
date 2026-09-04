@@ -6,7 +6,7 @@ Render, Node, or a build step. It talks to the backend (deployed
 separately) purely over the network via `fetch`.
 
 ```
-stub/
+stub-frontend/
 ├── index.html
 ├── style.css
 └── script.js
