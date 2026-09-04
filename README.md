@@ -1,4 +1,4 @@
-# Stub frontend
+# Stub
 
 Static HTML/CSS/JS frontend for Stub. Lives in its own repo (e.g. under a
 GitHub organization) and is deployed via GitHub Pages — it doesn't need
@@ -6,7 +6,7 @@ Render, Node, or a build step. It talks to the backend (deployed
 separately) purely over the network via `fetch`.
 
 ```
-stub-frontend/
+stub/
 ├── index.html
 ├── style.css
 └── script.js
