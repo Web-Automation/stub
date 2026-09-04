@@ -2,12 +2,15 @@
 // Example once deployed: 'https://textvault-api.onrender.com/api/entries'
 const API_BASE_URL = 'https://stub-api.onrender.com/api/entries';
 
+
 const MAX_WORDS = 5000;
 const EDIT_CODE_PATTERN = /^[A-Za-z0-9]{6}$/;
 
 // --- Elements: write ---
+const writeForm = document.getElementById('write-form');
 const textInput = document.getElementById('text-input');
 const wordCountEl = document.getElementById('word-count');
+const wordLimitHitNote = document.getElementById('word-limit-hit-note');
 const editCodeInput = document.getElementById('edit-code-input');
 const editCodeError = document.getElementById('edit-code-error');
 const saveButton = document.getElementById('save-button');
@@ -16,6 +19,7 @@ const ticket = document.getElementById('ticket');
 const ticketCode = document.getElementById('ticket-code');
 const ticketNote = document.getElementById('ticket-note');
 const copyCodeButton = document.getElementById('copy-code-button');
+const writeAnotherButton = document.getElementById('write-another-button');
 
 // --- Elements: retrieve ---
 const codeInput = document.getElementById('code-input');
@@ -50,6 +54,43 @@ function countWords(text) {
   return trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
 }
 
+// Cuts text off right after its Nth word, preserving all original spacing/
+// line breaks up to that point exactly (rather than rebuilding the string
+// from split words, which would flatten any multi-line formatting).
+function truncateToWordLimit(text, maxWords) {
+  const wordPattern = /\S+/g;
+  let match;
+  let count = 0;
+  let endOfLastAllowedWord = null;
+  while ((match = wordPattern.exec(text)) !== null) {
+    count++;
+    if (count === maxWords) {
+      endOfLastAllowedWord = match.index + match[0].length;
+    }
+    if (count > maxWords) {
+      return { text: text.slice(0, endOfLastAllowedWord), truncated: true };
+    }
+  }
+  return { text, truncated: false };
+}
+
+// Applies the hard word cap to a textarea in place, preserving cursor
+// position when the user was typing at the end (the common case), and
+// updates its word counter display.
+function enforceWordLimit(textarea, countEl) {
+  const { text, truncated } = truncateToWordLimit(textarea.value, MAX_WORDS);
+  if (truncated) {
+    const wasAtEnd = textarea.selectionStart === textarea.value.length && textarea.selectionEnd === textarea.value.length;
+    textarea.value = text;
+    if (wasAtEnd) {
+      textarea.setSelectionRange(text.length, text.length);
+    }
+  }
+  const count = countWords(textarea.value);
+  countEl.textContent = `${count.toLocaleString()} word${count === 1 ? '' : 's'}`;
+  return count;
+}
+
 function showError(el, message) {
   el.textContent = message;
   el.hidden = false;
@@ -80,19 +121,11 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-// --- Word counter (write) ---
+// --- Word counter (write) — hard-capped at MAX_WORDS, not just disabled ---
 textInput.addEventListener('input', () => {
   autoResize(textInput);
-  const count = countWords(textInput.value);
-  wordCountEl.textContent = `${count.toLocaleString()} word${count === 1 ? '' : 's'}`;
-
-  if (count > MAX_WORDS) {
-    wordCountEl.classList.add('over-limit');
-    saveButton.disabled = true;
-  } else {
-    wordCountEl.classList.remove('over-limit');
-    saveButton.disabled = false;
-  }
+  const count = enforceWordLimit(textInput, wordCountEl);
+  wordLimitHitNote.hidden = count !== MAX_WORDS;
 });
 
 // --- Save ---
@@ -136,17 +169,33 @@ saveButton.addEventListener('click', async () => {
     ticketNote.textContent = data.hasEditCode
       ? "Save this code to read your text again, and remember your edit code to update or delete it later. Kept for 1 year, then removed."
       : "Save this. You'll need it to read your text again — it's kept for 1 year, then removed. No edit code was set, so this entry can only be read, not changed.";
+    writeForm.hidden = true;
     ticket.hidden = false;
     ticket.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } catch (err) {
     showError(saveError, 'Could not reach the server. Check your connection and try again.');
   } finally {
-    saveButton.disabled = countWords(textInput.value) > MAX_WORDS;
+    saveButton.disabled = false;
     saveButton.textContent = 'Save';
   }
 });
 
 copyCodeButton.addEventListener('click', () => copyToClipboard(ticketCode.textContent, copyCodeButton, saveError));
+
+// --- Write another entry: resets the form and swaps the ticket back out ---
+writeAnotherButton.addEventListener('click', () => {
+  textInput.value = '';
+  editCodeInput.value = '';
+  hideError(saveError);
+  hideError(editCodeError);
+  wordCountEl.textContent = '0 words';
+  wordLimitHitNote.hidden = true;
+  autoResize(textInput);
+  ticket.hidden = true;
+  writeForm.hidden = false;
+  textInput.focus();
+  writeForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
 
 // --- Retrieve ---
 retrieveButton.addEventListener('click', async () => {
@@ -190,7 +239,6 @@ retrieveButton.addEventListener('click', async () => {
     autoResize(updateTextInput);
     const count = countWords(data.text);
     updateWordCount.textContent = `${count.toLocaleString()} word${count === 1 ? '' : 's'}`;
-    updateWordCount.classList.remove('over-limit');
 
     if (data.hasEditCode) {
       editControls.hidden = false;
@@ -244,10 +292,7 @@ downloadPdfButton.addEventListener('click', () => {
 // --- Update ---
 updateTextInput.addEventListener('input', () => {
   autoResize(updateTextInput);
-  const count = countWords(updateTextInput.value);
-  updateWordCount.textContent = `${count.toLocaleString()} word${count === 1 ? '' : 's'}`;
-  updateWordCount.classList.toggle('over-limit', count > MAX_WORDS);
-  updateButton.disabled = count > MAX_WORDS;
+  enforceWordLimit(updateTextInput, updateWordCount);
 });
 
 updateButton.addEventListener('click', async () => {
@@ -294,7 +339,7 @@ updateButton.addEventListener('click', async () => {
   } catch (err) {
     showError(updateError, 'Could not reach the server. Check your connection and try again.');
   } finally {
-    updateButton.disabled = countWords(updateTextInput.value) > MAX_WORDS;
+    updateButton.disabled = false;
     updateButton.textContent = 'Save changes';
   }
 });
