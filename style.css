@@ -53,15 +53,64 @@ body {
   margin: 0;
 }
 
-.panel {
-  margin-bottom: 8px;
+.tabs {
+  display: inline-flex;
+  gap: 2px;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 4px;
+  margin-bottom: 32px;
 }
 
-.panel h2 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.25rem;
-  margin: 0 0 16px;
+.tab {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  padding: 9px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--teal);
+  color: #fff;
+}
+
+.tab[aria-selected="true"]:hover {
+  color: #fff;
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.panel-content:not([hidden]) {
+  animation: panel-in 200ms ease-out;
+}
+
+.panel-content:focus-visible {
+  outline: none;
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .field-label {
@@ -107,12 +156,6 @@ input[type="text"]:focus {
   font-family: var(--font-mono);
 }
 
-.field-meta.over-limit #word-count,
-#word-count.over-limit {
-  color: var(--rust);
-  font-weight: 600;
-}
-
 .btn {
   font-family: var(--font-body);
   font-size: 0.9375rem;
@@ -121,12 +164,21 @@ input[type="text"]:focus {
   border-radius: 3px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color 120ms ease, border-color 120ms ease;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 .btn-primary {
@@ -354,10 +406,64 @@ input[type="text"]:focus {
   max-width: 48ch;
 }
 
-.section-divider {
-  height: 0;
-  border-top: 1px dashed var(--rule);
-  margin: 40px 0;
+.accordion {
+  margin-top: 20px;
+  border-top: 1px solid var(--rule);
+  padding-top: 4px;
+}
+
+.accordion summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion summary::after {
+  content: "+";
+  font-size: 1.125rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  transition: transform 150ms ease;
+}
+
+.accordion[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.accordion summary:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.accordion-body {
+  padding-top: 8px;
+  animation: panel-in 180ms ease-out;
+}
+
+.btn-back {
+  border: none;
+  background: none;
+  color: var(--teal-deep);
+  padding: 0;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.btn-back:hover:not(:disabled) {
+  text-decoration: underline;
+  transform: none;
 }
 
 .retrieve-row {
@@ -376,6 +482,7 @@ input[type="text"]:focus {
   border-radius: 3px;
   background: var(--paper-raised);
   padding: 18px 20px;
+  animation: ticket-in 250ms ease-out;
 }
 
 .result-meta {
@@ -440,6 +547,16 @@ input[type="text"]:focus {
   .tip-bubble {
     left: -6px;
   }
+  /* Full-width, evenly split tabs read better than a left-aligned pill
+     control once the screen is this narrow. */
+  .tabs {
+    display: flex;
+    width: 100%;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+  }
 }
 
 @media (max-width: 360px) {
@@ -449,7 +566,10 @@ input[type="text"]:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ticket {
+  .ticket,
+  .result,
+  .panel-content,
+  .accordion-body {
     animation: none;
   }
 }
