@@ -23,49 +23,55 @@
     <section class="panel" aria-labelledby="write-heading">
       <h2 id="write-heading">Write</h2>
 
-      <label for="text-input" class="field-label">Your text</label>
-      <textarea
-        id="text-input"
-        placeholder="Start writing…"
-        rows="6"
-        maxlength="60000"
-      ></textarea>
+      <div id="write-form">
+        <label for="text-input" class="field-label">Your text</label>
+        <textarea
+          id="text-input"
+          placeholder="Start writing…"
+          rows="6"
+          maxlength="60000"
+        ></textarea>
 
-      <div class="field-meta">
-        <span id="word-count">0 words</span>
-        <span id="word-limit-note">limit: 5,000 words</span>
-      </div>
+        <div class="field-meta">
+          <span id="word-count">0 words</span>
+          <span id="word-limit-note">limit: 5,000 words</span>
+        </div>
+        <p id="word-limit-hit-note" class="limit-note" hidden>You've reached the 5,000-word limit — anything past that won't be added.</p>
 
-      <div class="label-row">
-        <label for="edit-code-input" class="field-label">Edit code (optional)</label>
-        <span class="info-tip-wrapper">
-          <button type="button" class="info-tip" aria-label="What is an edit code?" aria-expanded="false">?</button>
-          <span id="edit-code-tip" class="tip-bubble" role="tooltip">
-            Set this if you might want to update or delete this entry later. Leave it blank if you're done once you save — you can still read it back, just not change or remove it.
+        <div class="label-row">
+          <label for="edit-code-input" class="field-label">Edit code (optional)</label>
+          <span class="info-tip-wrapper">
+            <button type="button" class="info-tip" aria-label="What is an edit code?" aria-expanded="false">?</button>
+            <span id="edit-code-tip" class="tip-bubble" role="tooltip">
+              Exactly 6 characters — letters and/or numbers. Set one if you might want to update or delete this entry later. Leave it blank if you're done once you save; you can still read it back, just not change or remove it.
+            </span>
           </span>
-        </span>
+        </div>
+        <input
+          id="edit-code-input"
+          type="text"
+          placeholder="e.g. Ab3xY9"
+          maxlength="6"
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="edit-code-tip"
+        />
+        <p id="edit-code-error" class="error-text" role="alert" hidden></p>
+
+        <button id="save-button" class="btn btn-primary" type="button">Save</button>
+        <p id="save-error" class="error-text" role="alert" hidden></p>
       </div>
-      <input
-        id="edit-code-input"
-        type="text"
-        placeholder="e.g. Ab3xY9"
-        maxlength="6"
-        autocomplete="off"
-        spellcheck="false"
-        aria-describedby="edit-code-tip"
-      />
-      <p id="edit-code-error" class="error-text" role="alert" hidden></p>
 
-      <button id="save-button" class="btn btn-primary" type="button">Save</button>
-      <p id="save-error" class="error-text" role="alert" hidden></p>
-
-      <!-- Ticket stub, shown after a successful save -->
+      <!-- Ticket stub, shown after a successful save; write-form above is hidden at the same time -->
       <div id="ticket" class="ticket" hidden>
         <div class="ticket-perforation" aria-hidden="true"></div>
         <p class="ticket-label">Your code</p>
         <p id="ticket-code" class="ticket-code">—</p>
         <p id="ticket-note" class="ticket-note">Save this. You'll need it to read your text again — it's kept for 1 year, then removed.</p>
-        <button id="copy-code-button" class="btn btn-quiet" type="button">Copy code</button>
+        <div class="ticket-actions">
+          <button id="copy-code-button" class="btn btn-quiet" type="button">Copy code</button>
+          <button id="write-another-button" class="btn btn-quiet" type="button">Write another entry</button>
+        </div>
       </div>
     </section>
 
