@@ -2,9 +2,14 @@
 // Example once deployed: 'https://textvault-api.onrender.com/api/entries'
 const API_BASE_URL = 'https://stub-api.onrender.com/api/entries';
 
-
 const MAX_WORDS = 5000;
 const EDIT_CODE_PATTERN = /^[A-Za-z0-9]{6}$/;
+
+// --- Elements: tabs ---
+const tabWrite = document.getElementById('tab-write');
+const tabRetrieve = document.getElementById('tab-retrieve');
+const panelWrite = document.getElementById('panel-write');
+const panelRetrieve = document.getElementById('panel-retrieve');
 
 // --- Elements: write ---
 const writeForm = document.getElementById('write-form');
@@ -22,9 +27,11 @@ const copyCodeButton = document.getElementById('copy-code-button');
 const writeAnotherButton = document.getElementById('write-another-button');
 
 // --- Elements: retrieve ---
+const retrieveForm = document.getElementById('retrieve-form');
 const codeInput = document.getElementById('code-input');
 const retrieveButton = document.getElementById('retrieve-button');
 const retrieveError = document.getElementById('retrieve-error');
+const lookupAnotherButton = document.getElementById('lookup-another-button');
 const result = document.getElementById('result');
 const resultMeta = document.getElementById('result-meta');
 const resultText = document.getElementById('result-text');
@@ -47,6 +54,40 @@ const deleteConfirmation = document.getElementById('delete-confirmation');
 
 // Tracks which entry is currently loaded, so update/delete know their target.
 let currentResponseId = null;
+
+// --- Tabs: only one panel is ever on screen at a time ---
+const tabs = [tabWrite, tabRetrieve];
+const panels = { 'tab-write': panelWrite, 'tab-retrieve': panelRetrieve };
+
+function activateTab(tab) {
+  tabs.forEach((t) => {
+    const isActive = t === tab;
+    t.setAttribute('aria-selected', String(isActive));
+    t.tabIndex = isActive ? 0 : -1;
+    panels[t.id].hidden = !isActive;
+  });
+  tab.focus();
+}
+
+tabs.forEach((tab) => {
+  tab.addEventListener('click', () => activateTab(tab));
+});
+
+// Left/Right arrow keys move focus between tabs, per standard tab-list
+// keyboard behavior — Home/End jump to the first/last tab.
+document.querySelector('.tabs').addEventListener('keydown', (event) => {
+  const currentIndex = tabs.indexOf(document.activeElement);
+  if (currentIndex === -1) return;
+  let nextIndex = null;
+  if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabs.length;
+  if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+  if (event.key === 'Home') nextIndex = 0;
+  if (event.key === 'End') nextIndex = tabs.length - 1;
+  if (nextIndex !== null) {
+    event.preventDefault();
+    activateTab(tabs[nextIndex]);
+  }
+});
 
 // --- Helpers ---
 function countWords(text) {
@@ -200,7 +241,6 @@ writeAnotherButton.addEventListener('click', () => {
 // --- Retrieve ---
 retrieveButton.addEventListener('click', async () => {
   hideError(retrieveError);
-  result.hidden = true;
   deleteConfirmation.hidden = true;
   currentResponseId = null;
 
@@ -227,7 +267,6 @@ retrieveButton.addEventListener('click', async () => {
       ? `Saved ${formatDate(data.createdAt)} · last updated ${formatDate(data.updatedAt)}`
       : `Saved ${formatDate(data.createdAt)}`;
     resultText.textContent = data.text;
-    result.hidden = false;
 
     // Reset the edit/delete subforms for this newly-loaded entry.
     hideError(updateError);
@@ -239,6 +278,7 @@ retrieveButton.addEventListener('click', async () => {
     autoResize(updateTextInput);
     const count = countWords(data.text);
     updateWordCount.textContent = `${count.toLocaleString()} word${count === 1 ? '' : 's'}`;
+    editControls.open = false; // collapsed by default, even if a previous entry left it expanded
 
     if (data.hasEditCode) {
       editControls.hidden = false;
@@ -248,7 +288,9 @@ retrieveButton.addEventListener('click', async () => {
       noEditNote.hidden = false;
     }
 
-    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    hideError(retrieveError);
+    retrieveForm.hidden = true;
+    result.hidden = false;
   } catch (err) {
     showError(retrieveError, 'Could not reach the server. Check your connection and try again.');
   } finally {
@@ -259,6 +301,17 @@ retrieveButton.addEventListener('click', async () => {
 
 codeInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') retrieveButton.click();
+});
+
+// --- Look up another code: swaps the result back out for the input form ---
+lookupAnotherButton.addEventListener('click', () => {
+  codeInput.value = '';
+  hideError(retrieveError);
+  deleteConfirmation.hidden = true;
+  result.hidden = true;
+  retrieveForm.hidden = false;
+  currentResponseId = null;
+  codeInput.focus();
 });
 
 copyTextButton.addEventListener('click', () => copyToClipboard(resultText.textContent, copyTextButton, retrieveError));
@@ -376,6 +429,7 @@ deleteButton.addEventListener('click', async () => {
     }
 
     result.hidden = true;
+    retrieveForm.hidden = false;
     deleteConfirmation.hidden = false;
     currentResponseId = null;
     codeInput.value = '';
