@@ -341,3 +341,30 @@ deleteButton.addEventListener('click', async () => {
     deleteButton.textContent = 'Delete permanently';
   }
 });
+
+// --- Info tooltip (tap-to-toggle, works for mouse, touch, and keyboard) ---
+document.querySelectorAll('.info-tip').forEach((button) => {
+  const bubble = button.nextElementSibling;
+  button.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const isOpen = bubble.classList.contains('is-visible');
+    document.querySelectorAll('.tip-bubble.is-visible').forEach((b) => b.classList.remove('is-visible'));
+    document.querySelectorAll('.info-tip[aria-expanded="true"]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+    if (!isOpen) {
+      bubble.classList.add('is-visible');
+      button.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tip-bubble.is-visible').forEach((b) => b.classList.remove('is-visible'));
+  document.querySelectorAll('.info-tip[aria-expanded="true"]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    document.querySelectorAll('.tip-bubble.is-visible').forEach((b) => b.classList.remove('is-visible'));
+    document.querySelectorAll('.info-tip[aria-expanded="true"]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+  }
+});
