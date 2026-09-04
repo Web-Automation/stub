@@ -167,6 +167,87 @@ input[type="text"]:focus {
   max-width: 52ch;
 }
 
+.label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.label-row .field-label {
+  margin-bottom: 0;
+}
+
+.info-tip-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.info-tip {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-soft);
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Invisible larger hit area so the icon stays visually small but is still
+   comfortable to tap accurately on a touchscreen. */
+.info-tip::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+}
+
+.info-tip:hover,
+.info-tip:focus-visible,
+.info-tip.is-active {
+  border-color: var(--teal);
+  color: var(--teal-deep);
+}
+
+.tip-bubble {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: 0;
+  width: max-content;
+  max-width: min(260px, 78vw);
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  padding: 10px 12px;
+  border-radius: 4px;
+  z-index: 10;
+  text-align: left;
+}
+
+.tip-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 8px;
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
+}
+
+.info-tip:hover + .tip-bubble,
+.info-tip:focus-visible + .tip-bubble,
+.tip-bubble.is-visible {
+  display: block;
+}
+
 .error-text {
   color: var(--rust);
   background: var(--rust-soft);
@@ -308,6 +389,7 @@ input[type="text"]:focus {
 
 .result-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -326,6 +408,31 @@ input[type="text"]:focus {
   }
   .retrieve-row {
     flex-direction: column;
+  }
+  /* Slightly taller tap targets — 40px was fine for a mouse pointer, less
+     so for a fingertip. */
+  .btn {
+    padding: 13px 20px;
+  }
+  .btn-quiet {
+    padding: 11px 16px;
+  }
+  /* A 10-character monospace code at 1.75rem can crowd a ~340px-wide
+     screen; drop a step so it reads as one clean line instead of wrapping
+     mid-code. */
+  .ticket-code {
+    font-size: 1.4rem;
+  }
+  /* Keep the tooltip from starting so close to the left edge of the
+     viewport that its shadow/arrow reads as clipped. */
+  .tip-bubble {
+    left: -6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding: 28px 14px 28px;
   }
 }
 
