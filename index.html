@@ -36,20 +36,24 @@
         <span id="word-limit-note">limit: 5,000 words</span>
       </div>
 
-      <label for="edit-code-input" class="field-label">Edit code (optional)</label>
+      <div class="label-row">
+        <label for="edit-code-input" class="field-label">Edit code (optional)</label>
+        <span class="info-tip-wrapper">
+          <button type="button" class="info-tip" aria-label="What is an edit code?" aria-expanded="false">?</button>
+          <span id="edit-code-tip" class="tip-bubble" role="tooltip">
+            Set this if you might want to update or delete this entry later. Leave it blank if you're done once you save — you can still read it back, just not change or remove it.
+          </span>
+        </span>
+      </div>
       <input
         id="edit-code-input"
         type="text"
-        placeholder="6 letters and/or numbers"
+        placeholder="e.g. Ab3xY9"
         maxlength="6"
         autocomplete="off"
         spellcheck="false"
+        aria-describedby="edit-code-tip"
       />
-      <p class="field-hint">
-        Set a 6-character code if you might want to update or delete this later.
-        Leave it blank if you're done once you save — you'll still be able to read it back,
-        just not change or remove it.
-      </p>
       <p id="edit-code-error" class="error-text" role="alert" hidden></p>
 
       <button id="save-button" class="btn btn-primary" type="button">Save</button>
