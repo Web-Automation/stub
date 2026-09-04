@@ -248,6 +248,12 @@ input[type="text"]:focus {
   display: block;
 }
 
+.limit-note {
+  color: var(--rust);
+  font-size: 0.8125rem;
+  margin: 0 0 20px;
+}
+
 .error-text {
   color: var(--rust);
   background: var(--rust-soft);
@@ -388,6 +394,12 @@ input[type="text"]:focus {
 }
 
 .result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ticket-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
