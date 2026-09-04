@@ -1,6 +1,6 @@
 // Point this at your deployed backend before publishing the frontend.
 // Example once deployed: 'https://textvault-api.onrender.com/api/entries'
-const API_BASE_URL = 'http://localhost:3000/api/entries';
+const API_BASE_URL = 'https://stub-api.onrender.com/api/entries';
 
 const MAX_WORDS = 5000;
 const EDIT_CODE_PATTERN = /^[A-Za-z0-9]{6}$/;
